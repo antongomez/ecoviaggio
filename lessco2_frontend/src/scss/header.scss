@@ -1,0 +1,10 @@
+@import "colors";
+
+.navbar-nav .nav-link:hover {
+  color: map-get($theme-colors, "primary");
+}
+
+/* Estilo para el enlace activo */
+.navbar-nav .nav-item.active .nav-link {
+  color: map-get($theme-colors, "primary");
+}

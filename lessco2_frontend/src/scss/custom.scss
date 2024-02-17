@@ -1,0 +1,13 @@
+// customized.scss
+
+@import "colors";
+
+@import "bootstrap/scss/bootstrap.scss";
+
+:root {
+  --bs-body-font-family: "Open Sans", "Roboto", sans-serif;
+}
+
+body {
+  padding-top: 50px;
+}
