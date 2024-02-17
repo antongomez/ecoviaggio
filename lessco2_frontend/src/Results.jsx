@@ -97,8 +97,48 @@ function GroupRoute({ route, index }) {
     coordinates.push(coordinates_group);
   });
 
+  let polyline_trains = [];
+  let polyline_planes = [];
+  let polyline_cars = [];
+
   let overall_coordinates = [...coordinates];
   if ("path" in step2 === true) {
+    step2["path"].map((step) => {
+      if (step["travel_type"] === "TRAIN") {
+        polyline_trains.push([
+          [
+            step["origin_coordinates"]["latitude"],
+            step["origin_coordinates"]["longitude"],
+          ],
+          [
+            step["destiny_coordinates"]["latitude"],
+            step["destiny_coordinates"]["longitude"],
+          ],
+        ]);
+      } else if (step["travel_type"] === "CAR") {
+        polyline_cars.push([
+          [
+            step["origin_coordinates"]["latitude"],
+            step["origin_coordinates"]["longitude"],
+          ],
+          [
+            step["destiny_coordinates"]["latitude"],
+            step["destiny_coordinates"]["longitude"],
+          ],
+        ]);
+      } else {
+        polyline_planes.push([
+          [
+            step["origin_coordinates"]["latitude"],
+            step["origin_coordinates"]["longitude"],
+          ],
+          [
+            step["destiny_coordinates"]["latitude"],
+            step["destiny_coordinates"]["longitude"],
+          ],
+        ]);
+      }
+    });
     overall_coordinates.push([
       L.latLng(step3["origin"]["latitude"], step3["origin"]["longitude"]),
       L.latLng(step3["destination"][1], step3["destination"][2]),
@@ -166,6 +206,18 @@ function GroupRoute({ route, index }) {
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Polyline
+                pathOptions={{ color: "purple" }}
+                positions={polyline_trains}
+              />
+              <Polyline
+                pathOptions={{ color: "blue" }}
+                positions={polyline_planes}
+              />
+              <Polyline
+                pathOptions={{ color: "red" }}
+                positions={polyline_cars}
               />
               {overall_coordinates.map((coordinates_group) => {
                 return <Routing coordinates_group={coordinates_group} />;
@@ -244,7 +296,16 @@ function OptionalPath({ step2, step3, total_emissions }) {
     let polyline_planes = [];
     let polyline_cars = [];
 
+    let center = undefined;
+
     step2["path"].map((step) => {
+      if (center === undefined) {
+        center = {
+          lat: step["origin_coordinates"]["latitude"],
+          lng: step["origin_coordinates"]["longitude"],
+        };
+      }
+
       if (step["travel_type"] === "TRAIN") {
         polyline_trains.push([
           [
@@ -256,8 +317,8 @@ function OptionalPath({ step2, step3, total_emissions }) {
             step["destiny_coordinates"]["longitude"],
           ],
         ]);
-      } else if (step["travel_type"] === "CARS") {
-        polyline_trains.push([
+      } else if (step["travel_type"] === "CAR") {
+        polyline_cars.push([
           [
             step["origin_coordinates"]["latitude"],
             step["origin_coordinates"]["longitude"],
@@ -268,7 +329,7 @@ function OptionalPath({ step2, step3, total_emissions }) {
           ],
         ]);
       } else {
-        polyline_trains.push([
+        polyline_planes.push([
           [
             step["origin_coordinates"]["latitude"],
             step["origin_coordinates"]["longitude"],
@@ -280,10 +341,6 @@ function OptionalPath({ step2, step3, total_emissions }) {
         ]);
       }
     });
-
-    let trains_options = { color: "blue" };
-    let planes_options = { color: "red" };
-    let cars_options = { color: "green" };
 
     return (
       <>
@@ -337,8 +394,8 @@ function OptionalPath({ step2, step3, total_emissions }) {
           </Col>
           <Col lg={4} className="d-flex flex-column justify-content-center">
             <MapContainer
-              center={{ lat: 43.0, lng: -8.1 }}
-              zoom={8}
+              center={center}
+              zoom={6}
               scrollWheelZoom={true}
               style={containerStyle}
             >
@@ -348,14 +405,17 @@ function OptionalPath({ step2, step3, total_emissions }) {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
               <Polyline
-                pathOptions={trains_options}
+                pathOptions={{ color: "purple" }}
                 positions={polyline_trains}
               />
               <Polyline
-                pathOptions={planes_options}
+                pathOptions={{ color: "blue" }}
                 positions={polyline_planes}
               />
-              <Polyline pathOptions={cars_options} positions={polyline_cars} />
+              <Polyline
+                pathOptions={{ color: "red" }}
+                positions={polyline_cars}
+              />
             </MapContainer>
             ,
           </Col>

@@ -24,8 +24,7 @@ export const Home = () => {
       passengerNumber: index + 1,
       lat: undefined,
       lng: undefined,
-      name: undefined,
-      nick: undefined,
+      name: undefined
     }))
   );
   const [latitud, setLatitud] = useState(undefined);
@@ -47,8 +46,7 @@ export const Home = () => {
       passengerNumber: containerCount + 1,
       lat: undefined,
       lng: undefined,
-      name: undefined,
-      nick: undefined,
+      name: undefined
     };
 
     setContainerId(containerId + 1);
@@ -56,11 +54,11 @@ export const Home = () => {
     setTravellerCards((prevCards) => [...prevCards, newCard]);
   };
 
-  const updateContainer = (id, lat, lng, name, nick) => {
+  const updateContainer = (id, lat, lng, name) => {
     setTravellerCards((prevCards) =>
       prevCards.map((card) =>
         card.id === id
-          ? { ...card, lat: lat, lng: lng, name: name, nick: nick }
+          ? { ...card, lat: lat, lng: lng, name: name }
           : card
       )
     );
@@ -138,7 +136,7 @@ export const Home = () => {
           <Col className="px-0">
             <h2 className="fw-bolder">Passengers</h2>
             <p>
-              Introduce the name and nickname of each passenger and its
+              Introduce the full name of each passenger and its
               departure location on the map
             </p>
           </Col>
@@ -211,9 +209,7 @@ export const Home = () => {
                     card.lat !== undefined &&
                     card.lng !== undefined &&
                     card.name !== undefined &&
-                    card.nick !== undefined &&
-                    card.name.length > 0 &&
-                    card.nick.length > 0
+                    card.name.length > 0 
                 ).length
               }
               /{travellerCards.length}
@@ -237,9 +233,7 @@ export const Home = () => {
                     card.lat !== undefined &&
                     card.lng !== undefined &&
                     card.name !== undefined &&
-                    card.nick !== undefined &&
-                    card.name.length > 0 &&
-                    card.nick.length > 0
+                    card.name.length > 0 
                 ).length < travellerCards.length
                   ? true
                   : false

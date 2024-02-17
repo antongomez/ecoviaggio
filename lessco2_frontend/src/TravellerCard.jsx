@@ -15,7 +15,6 @@ export const TravellerCard = ({
   id,
   passengerNumber,
   name,
-  nick,
   lat,
   lng,
   onDelete,
@@ -24,10 +23,8 @@ export const TravellerCard = ({
   const [latitud, setLatitud] = useState(lat);
   const [longitud, setLongitud] = useState(lng);
   const [inputname, setInputname] = useState(name);
-  const [inputnickname, setInputnickname] = useState(nick);
 
   let inputnameid = `input-name-${passengerNumber}`;
-  let inputnicknameid = `input-nickname-${passengerNumber}`;
 
   const containerStyle = {
     width: "100 %",
@@ -53,7 +50,7 @@ export const TravellerCard = ({
     const map = useMapEvent("click", (e) => {
       setLatitud(e.latlng.lat);
       setLongitud(e.latlng.lng);
-      onUpdate(id, e.latlng.lat, e.latlng.lng, inputname, inputnickname);
+      onUpdate(id, e.latlng.lat, e.latlng.lng, inputname);
     });
 
     return latitud === undefined || longitud === undefined ? undefined : (
@@ -79,9 +76,7 @@ export const TravellerCard = ({
                   latitud == undefined ||
                   longitud == undefined ||
                   inputname == undefined ||
-                  inputnickname == undefined ||
-                  inputname == "" ||
-                  inputnickname == ""
+                  inputname == "" 
                     ? "hidden"
                     : "visible"
                 }
@@ -99,34 +94,20 @@ export const TravellerCard = ({
           </Row>
           <Row className="mb-3">
             <Col lg={6} className="d-flex flex-column justify-content-center">
-              <Form.Label htmlFor={inputnameid}>Name</Form.Label>
+              <Form.Label htmlFor={inputnameid}>Full Name</Form.Label>
               <Form.Control
                 type="input"
                 defaultValue={name}
                 id={inputnameid}
-                className="w-75"
+                className="w-100"
                 onChange={(e) => {
                   setInputname(e.target.value);
                   onUpdate(
                     id,
                     latitud,
                     longitud,
-                    e.target.value,
-                    inputnickname
+                    e.target.value
                   );
-                }}
-              />
-            </Col>
-            <Col lg={6} className="d-flex flex-column justify-content-center">
-              <Form.Label htmlFor={inputnicknameid}>Nickname</Form.Label>
-              <Form.Control
-                type="input"
-                defaultValue={nick}
-                id={inputnicknameid}
-                className="w-75"
-                onChange={(e) => {
-                  setInputnickname(e.target.value);
-                  onUpdate(id, latitud, longitud, inputname, e.target.value);
                 }}
               />
             </Col>
