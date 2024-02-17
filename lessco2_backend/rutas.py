@@ -78,12 +78,12 @@ def divide_cluster(cluster):
 
 
 def concat_names(path):
-    if names is None:
+    if path is None:
         return None
-    names = [tupla[0] for tupla in path[:-1]]
+    names = [tupla[0] for tupla in path[:-2]]
     names = ", ".join(names)
-    if len(names) > 1:
-        names += " y " + names[-1]
+    if len(path) > 2:
+        names += " y " + path[-2][0]
     return names
 
 
@@ -180,6 +180,14 @@ def obtain_shortest_path(distances):
     return shortest_path
 
 
+def get_path_emissions(path):
+    coords = np.array([tupla[1:] for tupla in path])
+    total_distance = 0
+    for i in range(len(coords) - 1):
+        total_distance += __distancia_semiverseno__(coords[i], coords[i + 1])
+    return car_emissions(total_distance)
+
+
 def get_path_length(path, distances):
     if path is None:
         return 0
@@ -218,16 +226,21 @@ def obtain_all_routes(coordinates, destination, emissions_graph, node_data, edge
         route, first_city = route_to_graph(cluster, node_data)
         cluster_route["step1"] = route
 
-        internal_route, total_emissions = dijkstra_route(
-            first_city["id"], last_city["id"], emissions_graph, node_data, edge_data
-        )
-        cluster_route["step2"] = {"path": internal_route, "emissions": total_emissions}
+        if first_city["id"] == last_city["id"]:
+            for group in cluster_route["step1"]:
+                group["path"][-1] = destination
+                group["emissions"] = get_path_emissions(group["path"])
+        else:
+            internal_route, total_emissions = dijkstra_route(
+                first_city["id"], last_city["id"], emissions_graph, node_data, edge_data
+            )
+            cluster_route["step2"] = {"path": internal_route, "emissions": total_emissions}
 
-        cluster_route["step3"] = {
-            "origin": last_city,
-            "destination": destination,
-            "distance": car_emissions(dist_from_last_city),
-        }
+            cluster_route["step3"] = {
+                "origin": last_city,
+                "destination": destination,
+                "emissions": car_emissions(dist_from_last_city),
+            }
 
         final_routes.append(cluster_route)
 

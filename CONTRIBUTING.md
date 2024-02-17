@@ -8,7 +8,7 @@ This project is governed by the [Contributor Covenant Code of Conduct](CODE_OF_C
 
 ## Questions and Issues
 
-We appreciate your feedback and questions. Our preferred way to communicate is through GitHub issues. Before asking a question, please search the existing issues to see if somene has already covered the topic. If you can't find an answer, feel free to open a new issue.
+We appreciate your feedback and questions. Our preferred way to communicate is through GitHub issues. Before asking a question, please search the existing issues to see if someone has already covered the topic. If you can't find an answer, feel free to open a new issue.
 
 ## I want to contribute
 

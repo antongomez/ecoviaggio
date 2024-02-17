@@ -1,0 +1,39 @@
+Array [ {…} ]
+​
+0: Object { step1: (1) […], step2: {…}, step3: {…} }
+​​
+step1: Array [ {…} ]
+​​​
+0: Object { path: (3) […], emissions: 127.8295429827483, names: "a y b" }
+​​​​
+emissions: 127.8295429827483
+​​​​
+names: "a y b"
+​​​​
+path: Array(3) [ (3) […], (3) […], (3) […] ]
+​​​​​
+0: Array(3) [ "a", 43.11314783969378, -8.314398270691038 ]
+​​​​​
+1: Array(3) [ "b", 42.912317459597155, -8.49036763127153 ]
+​​​​​
+2: Array(3) [ "Santiago de Compostela", 42.870842, -8.544697 ]
+​​​​​
+length: 3
+​​​​​
+<prototype>: Array []
+​​​​
+<prototype>: Object { … }
+​​​
+length: 1
+​​​
+<prototype>: Array []
+​​
+step2: Object { path: (1) […], emissions: 3.2729888044664257 }
+​​
+step3: Object { origin: {…}, destination: (3) […], distance: 400.7449821439656 }
+​​
+<prototype>: Object { … }
+​
+length: 1
+​
+<prototype>: Array 
