@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2024 EcoViaggio
+
+SPDX-License-Identifier: MIT
+-->
 
 # Contributor Covenant Code of Conduct
 

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2024 EcoViaggio
+//
+// SPDX-License-Identifier: MIT
+
 import React from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";

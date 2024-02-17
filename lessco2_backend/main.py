@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 EcoViaggio
+#
+# SPDX-License-Identifier: MIT
+
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from load_public_transport_graph import load_default_public_transport_graph

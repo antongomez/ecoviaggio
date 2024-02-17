@@ -1,3 +1,11 @@
+# SPDX-FileCopyrightText: 2024 EcoViaggio
+#
+# SPDX-License-Identifier: MIT
+
+# SPDX-FileCopyrightText: 2024 EcoViaggio
+#
+# SPDX-License-Identifier: MIT
+
 import requests
 import json
 import sys

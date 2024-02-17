@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2024 EcoViaggio
+//
+// SPDX-License-Identifier: MIT
+
 import Container from "react-bootstrap/esm/Container";
 import { TravellerCard } from "./TravellerCard";
 import { Col, Row } from "react-bootstrap";

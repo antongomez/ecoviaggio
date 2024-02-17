@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 EcoViaggio
+#
+# SPDX-License-Identifier: MIT
+
 annotated-types==0.6.0
 anyio==4.2.0
 argon2-cffi==23.1.0

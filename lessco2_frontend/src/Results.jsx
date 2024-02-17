@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2024 EcoViaggio
+//
+// SPDX-License-Identifier: MIT
+
 import React from "react";
 import { Container } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
@@ -143,7 +147,7 @@ function GroupRoute({ route, index }) {
           <Col xs="auto" className="py-2">
             <p>
               Total trip emissions: {Math.round(total_emissions * 100) / 100} kg
-              Co2/km
+              Co2
             </p>
           </Col>
         </Row>
@@ -216,8 +220,7 @@ function FriendsPath({ group, emissions }) {
               </Col>
               <Col xs="auto" className="py-2">
                 <p>
-                  Section emissions: {Math.round(emissions * 100) / 100} kg
-                  Co2/km
+                  Section emissions: {Math.round(emissions * 100) / 100} kg Co2
                 </p>
               </Col>
             </Row>
@@ -237,16 +240,50 @@ function OptionalPath({ step2, step3, total_emissions }) {
       L.latLng(step3["destination"][1], step3["destination"][2]),
     ];
 
-    let polyline = [
-      [
-        [43.1, -8.1],
-        [43.2, -8.2],
-        [43.3, -8.3],
-        [43.4, -8.4],
-      ],
-    ];
+    let polyline_trains = [];
+    let polyline_planes = [];
+    let polyline_cars = [];
 
-    let limeOptions = { color: "blue" };
+    step2["path"].map((step) => {
+      if (step["travel_type"] === "TRAIN") {
+        polyline_trains.push([
+          [
+            step["origin_coordinates"]["latitude"],
+            step["origin_coordinates"]["longitude"],
+          ],
+          [
+            step["destiny_coordinates"]["latitude"],
+            step["destiny_coordinates"]["longitude"],
+          ],
+        ]);
+      } else if (step["travel_type"] === "CARS") {
+        polyline_trains.push([
+          [
+            step["origin_coordinates"]["latitude"],
+            step["origin_coordinates"]["longitude"],
+          ],
+          [
+            step["destiny_coordinates"]["latitude"],
+            step["destiny_coordinates"]["longitude"],
+          ],
+        ]);
+      } else {
+        polyline_trains.push([
+          [
+            step["origin_coordinates"]["latitude"],
+            step["origin_coordinates"]["longitude"],
+          ],
+          [
+            step["destiny_coordinates"]["latitude"],
+            step["destiny_coordinates"]["longitude"],
+          ],
+        ]);
+      }
+    });
+
+    let trains_options = { color: "blue" };
+    let planes_options = { color: "red" };
+    let cars_options = { color: "green" };
 
     return (
       <>
@@ -293,12 +330,12 @@ function OptionalPath({ step2, step3, total_emissions }) {
               <Col xs="auto" className="py-2">
                 <p>
                   Section emissions:{" "}
-                  {Math.round(step2["emissions"] * 100) / 100} kg Co2/km
+                  {Math.round(step2["emissions"] * 100) / 100} kg Co2
                 </p>
               </Col>
             </Row>
           </Col>
-          <Col lg={4}>
+          <Col lg={4} className="d-flex flex-column justify-content-center">
             <MapContainer
               center={{ lat: 43.0, lng: -8.1 }}
               zoom={8}
@@ -310,7 +347,15 @@ function OptionalPath({ step2, step3, total_emissions }) {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              <Polyline pathOptions={limeOptions} positions={polyline} />
+              <Polyline
+                pathOptions={trains_options}
+                positions={polyline_trains}
+              />
+              <Polyline
+                pathOptions={planes_options}
+                positions={polyline_planes}
+              />
+              <Polyline pathOptions={cars_options} positions={polyline_cars} />
             </MapContainer>
             ,
           </Col>
@@ -346,7 +391,7 @@ function OptionalPath({ step2, step3, total_emissions }) {
               <Col xs="auto" className="py-2">
                 <p>
                   Section emissions:{" "}
-                  {Math.round(step3["emissions"] * 100) / 100} kg Co2/km
+                  {Math.round(step3["emissions"] * 100) / 100} kg Co2
                 </p>
               </Col>
             </Row>

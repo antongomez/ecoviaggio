@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2024 EcoViaggio
+//
+// SPDX-License-Identifier: MIT
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Home } from "./Home";

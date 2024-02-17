@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 EcoViaggio
+#
+# SPDX-License-Identifier: MIT
+
 import math
 from sklearn.cluster import DBSCAN
 from scipy.spatial.distance import cdist

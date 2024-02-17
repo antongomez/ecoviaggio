@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2024 EcoViaggio
+//
+// SPDX-License-Identifier: MIT
+
 let __instance = null
 
 export default class API {

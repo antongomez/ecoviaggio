@@ -1,0 +1,17 @@
+version: '3.7'
+services:
+  ecoviaggio-backend:
+    build: lessco2_backend/
+    image: ecoviaggio/backend
+    container_name: ecoviaggio-backend
+
+  ecoviaggio-frontend:
+    build: lessco2_frontend/
+    image: ecoviaggio/frontend
+    container_name: ecoviaggio-frontend
+    enviroment:
+      - VITE_API_BASE_URL=http://ecoviaggio-backend:3000
+      - VITE_API_SECURE=true
+
+    ports:
+      - 3000:3000

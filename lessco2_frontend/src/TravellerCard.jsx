@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2024 EcoViaggio
+//
+// SPDX-License-Identifier: MIT
+
 import React from "react";
 import { useState } from "react";
 import { Col, Form, Row, Container, Button } from "react-bootstrap";

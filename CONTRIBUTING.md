@@ -15,3 +15,11 @@ We appreciate your feedback and questions. Our preferred way to communicate is t
 We are glad to hear that! In order to contribute, please open a new issue to discuss the changes you would like to make. We will review your proposal and provide feedback. Once we agree on the changes, you can submit a pull request.
 
 We are a small team and we may not be able to review your pull request immediately. We will do our best to provide feedback as soon as possible.
+
+### License
+
+Remember to annotate all the files under the project with [reuse](https://github.com/fsfe/reuse-tool) using the following command
+
+```sh
+reuse annotate --copyright="EcoViaggio" --license=MIT -r . --skip-unrecognised
+```

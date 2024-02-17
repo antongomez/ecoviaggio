@@ -1,15 +1,10 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
+// SPDX-FileCopyrightText: 2024 EcoViaggio
+//
+// SPDX-License-Identifier: MIT
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  // server: {
-  //   proxy: {
-  //     "/api": {
-  //       target: `${process.env.VITE_API_BASE_URL}`,
-  //       changeOrigin: true,
-  //       rewrite: (path) => path.replace(/^\/api/, ""),
-  //     },
+import { defineConfig } from     changeOrigin: true,
+  //       rewrite: ,path) => path.replace(/^\/api/, ""),
+  /
   //   },
   // },
   plugins: [react()],

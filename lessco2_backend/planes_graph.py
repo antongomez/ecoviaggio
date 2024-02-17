@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 EcoViaggio
+#
+# SPDX-License-Identifier: MIT
+
 from models import Node, Edge
 import json
 import math
