@@ -86,12 +86,18 @@ function GroupRoute({ route, index }) {
   });
 
   const total_emissions =
-    step1_emissions + step2["emissions"] + step3["emissions"];
+    step1_emissions +
+    (step2 === undefined ? 0 : step2["emissions"] + step3["emissions"]);
+
+  let center = undefined;
 
   let coordinates = [];
   step1.map((group) => {
     let coordinates_group = [];
     group["path"].map((step) => {
+      if (center === undefined) {
+        center = L.latLng(step[1], step[2]);
+      }
       coordinates_group.push(L.latLng(step[1], step[2]));
     });
     coordinates.push(coordinates_group);
@@ -102,7 +108,7 @@ function GroupRoute({ route, index }) {
   let polyline_cars = [];
 
   let overall_coordinates = [...coordinates];
-  if ("path" in step2 === true) {
+  if (step2 !== undefined) {
     step2["path"].map((step) => {
       if (step["travel_type"] === "TRAIN") {
         polyline_trains.push([
@@ -146,7 +152,7 @@ function GroupRoute({ route, index }) {
   }
 
   return (
-    <Row className="mx-4 p-3 border rounded-2 shadow bg-white">
+    <Row className="mx-4 my-5 p-3 border rounded-2 shadow bg-white">
       <Col>
         <h2>Grupo {index + 1}</h2>
         <hr className="my-4" />
@@ -194,10 +200,7 @@ function GroupRoute({ route, index }) {
         <Row className="d-flex justify-content-center">
           <Col lg={8}>
             <MapContainer
-              center={{
-                lat: step3["origin"]["latitude"],
-                lng: step3["origin"]["longitude"],
-              }}
+              center={center}
               zoom={6}
               scrollWheelZoom={true}
               style={containerStyle}
@@ -283,8 +286,8 @@ function FriendsPath({ group, emissions }) {
   );
 }
 
-function OptionalPath({ step2, step3, total_emissions }) {
-  if ("path" in step2 === false) {
+function OptionalPath({ step2, step3 }) {
+  if (step2 === undefined) {
     return null;
   } else {
     let coordinates_step3 = [
