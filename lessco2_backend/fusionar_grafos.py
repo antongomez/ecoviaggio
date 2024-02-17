@@ -1,3 +1,11 @@
+# SPDX-FileCopyrightText: 2024 EcoViaggio
+#
+# SPDX-License-Identifier: MIT
+
+# SPDX-FileCopyrightText: 2024 EcoViaggio
+#
+# SPDX-License-Identifier: MIT
+
 import grafo_trenes
 import planes_graph
 from itertools import combinations
@@ -47,7 +55,7 @@ for n1, n2 in combinations(node_data, 2):
             continue
 
         response = response.json()
-        distancia_tierra = response["routes"][0]["distance"]/1000 # distancia en km
+        distancia_tierra = response["routes"][0]["distance"] / 1000  # distancia en km
         # TODO: calcular co2
         graph[n1][n2] = Edge(origin=n1, destination=n2, distance=distancia_tierra, co2=1, type="CAR")
         graph[n2][n1] = Edge(origin=n2, destination=n1, distance=distancia_tierra, co2=1, type="CAR")

@@ -88,7 +88,6 @@ export const Home = () => {
   }
 
   function LocationMarker() {
-    /* Hook providing the Leaflet Map instance in any descendant of a MapContainer */
     const map = useMapEvent("click", (e) => {
       setLatitud(e.latlng.lat);
       setLongitud(e.latlng.lng);
@@ -124,29 +123,6 @@ export const Home = () => {
       });
   };
 
-  const onClickBuildTrip2 = () => {
-    setLoading(true);
-    axios
-      .post(API.instance().getHTTPURLForPath("/routes"), {
-        origins: travellerCards.map((card) => ({
-          name: card.name,
-          latitude: card.lat,
-          longitude: card.lng,
-        })),
-        destination_latitude: latitud,
-        destination_longitude: longitud,
-      })
-      .then((response) => response.data)
-      .then((data) => {
-        setLoading(false);
-        navigate("/results2", { state: data });
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.log(err);
-      });
-  };
-
   return (
     <>
       <Container fluid className="py-5 bg-body-tertiary mb-5">
@@ -154,9 +130,6 @@ export const Home = () => {
           <h1 className="text-primary fw-bolder">Welcome to EcoViaggio!</h1>
           <p>Travel responsibly, leave a greener tomorrow</p>
         </Row>
-        <button className="btn btn-primary me-4" onClick={onClickBuildTrip2}>
-          Build Trip
-        </button>
         <Row className="mx-4 px-3">
           <Col className="px-0">
             <h2 className="fw-bolder">Passengers</h2>
