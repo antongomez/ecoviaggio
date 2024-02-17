@@ -206,7 +206,9 @@ def dijkstra_route(origin, destiny, emissions_graph, node_data, edge_data):
     for id1, id2 in zip(shortest_route, shortest_route[1:]):
         step = {
             "origin": node_data[id1]["name"],
+            "origin_coordinates": {"latitude": node_data[id1]["latitude"], "longitude": node_data[id1]["longitude"]},
             "destiny": node_data[id2]["name"],
+            "destiny_coordinates": {"latitude": node_data[id2]["latitude"], "longitude": node_data[id2]["longitude"]},
             "emission": emissions_graph[id1][id2]["weight"],
             "travel_type": edge_data[id1][id2]["type"],
         }
