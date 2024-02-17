@@ -1,13 +1,13 @@
-<!--
-SPDX-FileCopyrightText: 2024 EcoViaggio
-
-SPDX-License-Identifier: MIT
--->
-
 # EcoViaggio
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Coven
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
+
+![EcoViaggio logo](https://github.com/antongomez/ecoviaggio/blob/main/lessco2_frontend/public/SymbolLogo.png)
+
+EcoViaggio is a web application that helps you travel with a group minimizing your carbon footprint🌿. Enter the locations each of your group travellers will be starting from and your destination and let EcoViaggio give you a route minimizing the amount of CO2 generated.
+
+This project was developed for [HackUDC 2024](https://hackudc.gpul.org/).
 
 # Licenses
 
@@ -56,8 +56,3 @@ SPDX-License-Identifier: MIT
 
 Aiming to avoid conflicts we opted for the MIT license since we mostly seek that our project is simple and open. We thoroughly checked all our depedencies and software used in the development of our project in order to reach this conclusion.
 
-![EcoViaggio logo](https://github.com/antongomez/ecoviaggio/blob/main/lessco2_frontend/public/SymbolLogo.png)
-
-EcoViaggio is a web application that helps you travel with a group minimizing your carbon footprint🌿. Enter the locations each of your group travellers will be starting from and your destination and let EcoViaggio give you a route minimizing the amount of CO2 generated.
-
-This project was developed for [HackUDC 2024](https://hackudc.gpul.org/).
