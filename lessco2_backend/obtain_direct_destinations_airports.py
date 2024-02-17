@@ -93,5 +93,5 @@ for iata in destinations.keys():
 locations_destinations = {"locations": locations, "destinations": destinations}
 json_resultante = json.dumps(locations_destinations, indent=2)
 
-with open("locations_destinations.json", "w") as file:
+with open("locations_destinations_airports.json", "w") as file:
     json.dump(locations_destinations, file, indent=2)

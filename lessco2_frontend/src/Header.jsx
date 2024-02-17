@@ -7,14 +7,10 @@ import "./scss/header.scss";
 
 export const Header = () => {
   return (
-    <Navbar
-      expand="lg"
-      fixed="top"
-      className="bg-body-tertiary fw-bolder fs-6 shadow"
-    >
+    <Navbar expand="lg" fixed="top" className="bg-white fw-bolder fs-6 shadow">
       <Container>
         <Navbar.Brand href="#home" className="fs-5">
-          <img src="/NameLogo.svg" style={{ width: "35%" }} />
+          <img src="/NameLogo.svg" style={{ width: "700%" }} />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">

@@ -1,66 +1,22 @@
 from models import Node, Edge
+import math
 
+def semiverseno(c1, c2):
+    radioTierra = 6371
+    lat1 = math.radians(c1[0])
+    lon1 = math.radians(c1[1])
+    lat2 = math.radians(c2[0])
+    lon2 = math.radians(c2[1])
+
+    sinChi = math.sin((lat2 - lat1) / 2)
+    sinLambda = math.sin((lon2 - lon1) / 2)
+
+    raiz = (sinChi * sinChi) + math.cos(lat1) * math.cos(lat2) * (sinLambda * sinLambda)
+
+    return 2 * radioTierra * math.asin(math.sqrt(raiz))
 
 class TrainsGraph:
     def __init__(self):
-        base_graph = {}
-
-        base_graph["31412"] = {"31400"}  # A Coruña
-        base_graph["31400"] = {"23004", "22100"}  # Santiago de Compostela
-        base_graph["23004"] = {"08223"}  # Pontevedra
-        base_graph["08223"] = {"22100"}  # Vigo
-        base_graph["22100"] = {"30200", "15100"}  # Ourense
-        base_graph["15100"] = {"15211", "14100"}  # León
-        base_graph["30200"] = {"10600", "12100", "30100"}  # Zamora
-        base_graph["14100"] = {"14223", "11014", "10600"}  # Palencia
-        base_graph["10600"] = {"12100"}  # Valladolid
-        base_graph["30100"] = {"10400"}  # Salamanca
-        base_graph["10400"] = {"12100", "17000"}  # Avila
-        base_graph["11014"] = {"13200", "80100", "81100"}  # Burgos
-        base_graph["80100"] = {"04040"}  # Pamplona
-        base_graph["81100"] = {"04040"}  # Logroño
-        base_graph["12100"] = {"17000"}  # Segovia
-        base_graph["17000"] = {"70200", "03208", "92102", "35400", "37200"}  # Madrid
-        base_graph["70200"] = {"82100"}  # Soria
-        base_graph["04040"] = {"82100", "74200", "78400", "67200"}  # Zaragoza
-        base_graph["67200"] = {"65300"}  # Teurel
-        base_graph["71500"] = {"78400", "65300", "71801"}
-        base_graph["71801"] = {"79300"}  # Barcelona
-        base_graph["65000"] = {"65300", "03208"}  # Valencia
-        base_graph["60600"] = {"03208", "60911", "61200"}  # Albacete
-        base_graph["60911"] = {"61200"}  # Alicante
-        base_graph["37500"] = {"35400", "37200", "51003", "43019"}  # Merida
-        base_graph["51003"] = {"43019", "50500", "51405", "54413"}  # Sevilla
-        base_graph["50500"] = {"37200", "03100", "54413"}  # Cordoba
-        base_graph["05000"] = {"54413", "56312"}  # Granada
-
-        # Make symmetric: merge graph with its transposed
-        transposed = {}
-        for origin in base_graph:
-            for destination in base_graph[origin]:
-                if destination not in transposed:
-                    transposed[destination] = {origin}
-                else:
-                    transposed[destination].add(origin)
-
-        # Merge
-        for origin in transposed:
-            if origin in base_graph:
-                base_graph[origin] = base_graph[origin].union(transposed[origin])
-            else:
-                base_graph[origin] = transposed[origin]
-
-        # Add node and edge data
-        self.trains_graph = {}
-
-        for origin in base_graph:
-            self.trains_graph[origin] = {}
-            for destination in base_graph[origin]:
-                # TODO: Add real distance and co2
-                self.trains_graph[origin][destination] = Edge(
-                    origin=origin, destination=destination, distance=1, co2=1, type="TRAIN"
-                )
-
         self.node_data = {}
         self.node_data["31412"] = Node(
             id="31412", name="A Coruña", latitude=43.3496932, longitude=-8.4155629, type="TRAIN_STATION"
@@ -208,3 +164,64 @@ class TrainsGraph:
         self.node_data["04040"] = Node(
             id="04040", name="Zaragoza - Delicias", latitude=41.658649, longitude=-0.911615, type="TRAIN_STATION"
         )
+    
+        base_graph = {}
+
+        base_graph["31412"] = {"31400"}  # A Coruña
+        base_graph["31400"] = {"23004", "22100"}  # Santiago de Compostela
+        base_graph["23004"] = {"08223"}  # Pontevedra
+        base_graph["08223"] = {"22100"}  # Vigo
+        base_graph["22100"] = {"30200", "15100"}  # Ourense
+        base_graph["15100"] = {"15211", "14100"}  # León
+        base_graph["30200"] = {"10600", "12100", "30100"}  # Zamora
+        base_graph["14100"] = {"14223", "11014", "10600"}  # Palencia
+        base_graph["10600"] = {"12100"}  # Valladolid
+        base_graph["30100"] = {"10400"}  # Salamanca
+        base_graph["10400"] = {"12100", "17000"}  # Avila
+        base_graph["11014"] = {"13200", "80100", "81100"}  # Burgos
+        base_graph["80100"] = {"04040"}  # Pamplona
+        base_graph["81100"] = {"04040"}  # Logroño
+        base_graph["12100"] = {"17000"}  # Segovia
+        base_graph["17000"] = {"70200", "03208", "92102", "35400", "37200"}  # Madrid
+        base_graph["70200"] = {"82100"}  # Soria
+        base_graph["04040"] = {"82100", "74200", "78400", "67200"}  # Zaragoza
+        base_graph["67200"] = {"65300"}  # Teurel
+        base_graph["71500"] = {"78400", "65300", "71801"}
+        base_graph["71801"] = {"79300"}  # Barcelona
+        base_graph["65000"] = {"65300", "03208"}  # Valencia
+        base_graph["60600"] = {"03208", "60911", "61200"}  # Albacete
+        base_graph["60911"] = {"61200"}  # Alicante
+        base_graph["37500"] = {"35400", "37200", "51003", "43019"}  # Merida
+        base_graph["51003"] = {"43019", "50500", "51405", "54413"}  # Sevilla
+        base_graph["50500"] = {"37200", "03100", "54413"}  # Cordoba
+        base_graph["05000"] = {"54413", "56312"}  # Granada
+
+        # Make symmetric: merge graph with its transposed
+        transposed = {}
+        for origin in base_graph:
+            for destination in base_graph[origin]:
+                if destination not in transposed:
+                    transposed[destination] = {origin}
+                else:
+                    transposed[destination].add(origin)
+
+        # Merge
+        for origin in transposed:
+            if origin in base_graph:
+                base_graph[origin] = base_graph[origin].union(transposed[origin])
+            else:
+                base_graph[origin] = transposed[origin]
+
+                # Add node and edge data
+        self.trains_graph = {}
+
+        for origin in base_graph:
+            self.trains_graph[origin] = {}
+            for destination in base_graph[origin]:
+                lat1 = self.node_data[origin].latitude
+                lon1 = self.node_data[origin].longitude
+                lat2 = self.node_data[destination].latitude
+                lon2 = self.node_data[destination].longitude
+                self.trains_graph[origin][destination] = Edge(
+                    origin=origin, destination=destination, distance=semiverseno((lat1, lon1), (lat2, lon2)), co2=1, type="TRAIN"
+                )

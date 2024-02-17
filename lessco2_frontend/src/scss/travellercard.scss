@@ -1,0 +1,9 @@
+@import "colors";
+
+.trash:hover {
+  color: map-get($theme-colors, "danger");
+}
+
+.trash {
+  color: map-get($theme-colors, "dark");
+}

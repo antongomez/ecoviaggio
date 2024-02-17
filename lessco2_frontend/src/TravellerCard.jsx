@@ -1,20 +1,29 @@
 import React from "react";
 import { useState } from "react";
-import { Col, Form, Row, Container } from "react-bootstrap";
+import { Col, Form, Row, Container, Button } from "react-bootstrap";
+import { Trash, Check } from "react-bootstrap-icons";
 import "leaflet/dist/leaflet.css";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  useMapEvents,
-  useMap,
-} from "react-leaflet";
+import "./scss/travellercard.scss";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import { useMapEvent } from "react-leaflet/hooks";
 
-export const TravellerCard = () => {
-  const [latitud, setLatitud] = useState(undefined);
-  const [longitud, setLongitud] = useState(undefined);
+export const TravellerCard = ({
+  id,
+  passengerNumber,
+  name,
+  nick,
+  lat,
+  lng,
+  onDelete,
+  onUpdate,
+}) => {
+  const [latitud, setLatitud] = useState(lat);
+  const [longitud, setLongitud] = useState(lng);
+  const [inputname, setInputname] = useState(name);
+  const [inputnickname, setInputnickname] = useState(nick);
+
+  let inputnameid = `input-name-${passengerNumber}`;
+  let inputnicknameid = `input-nickname-${passengerNumber}`;
 
   const containerStyle = {
     width: "100 %",
@@ -25,11 +34,22 @@ export const TravellerCard = () => {
     lng: -8.4106015,
   };
 
+  function AttributionControl() {
+    const map = useMap();
+
+    map.attributionControl.setPrefix(
+      '<a href="https://leafletjs.com/" title="A JavaScript library for interactive maps">Leaflet</a>'
+    );
+
+    return null;
+  }
+
   function LocationMarker() {
     /* Hook providing the Leaflet Map instance in any descendant of a MapContainer */
     const map = useMapEvent("click", (e) => {
       setLatitud(e.latlng.lat);
       setLongitud(e.latlng.lng);
+      onUpdate(id, e.latlng.lat, e.latlng.lng, inputname, inputnickname);
     });
 
     return latitud === undefined || longitud === undefined ? undefined : (
@@ -41,28 +61,69 @@ export const TravellerCard = () => {
 
   return (
     <Container fluid>
-      <Row className="border rounded-2 shadow bg-white mx-4 my-2 p-3 w-80">
+      <Row className="border rounded-2 shadow bg-white mx-4 my-2 p-3">
         <Col lg={8}>
           <Row className="mt-2 mb-3">
-            <h2>Passenger 1</h2>
+            <Col xs="auto">
+              <h3>Passenger {passengerNumber}</h3>
+            </Col>
+            <Col xs="auto" className="d-flex align-items-center">
+              <Check
+                size={40}
+                className="x text-success"
+                visibility={
+                  latitud == undefined ||
+                  longitud == undefined ||
+                  inputname == undefined ||
+                  inputnickname == undefined ||
+                  inputname == "" ||
+                  inputnickname == ""
+                    ? "hidden"
+                    : "visible"
+                }
+              />
+            </Col>
+            <Col xs="auto" className="d-flex align-items-center">
+              <Button
+                variant="transparent"
+                className="p-0 border-0"
+                onClick={() => onDelete(id)}
+              >
+                <Trash size={24} className="trash" />
+              </Button>
+            </Col>
           </Row>
-          <Row className="">
+          <Row className="mb-3">
             <Col lg={6} className="d-flex flex-column justify-content-center">
-              <Form.Label htmlFor="inputName">Name</Form.Label>
+              <Form.Label htmlFor={inputnameid}>Name</Form.Label>
               <Form.Control
                 type="input"
-                id="inputName"
-                aria-describedby="passwordHelpBlock"
+                defaultValue={name}
+                id={inputnameid}
                 className="w-75"
+                onChange={(e) => {
+                  setInputname(e.target.value);
+                  onUpdate(
+                    id,
+                    latitud,
+                    longitud,
+                    e.target.value,
+                    inputnickname
+                  );
+                }}
               />
             </Col>
             <Col lg={6} className="d-flex flex-column justify-content-center">
-              <Form.Label htmlFor="inputName">Nickname</Form.Label>
+              <Form.Label htmlFor={inputnicknameid}>Nickname</Form.Label>
               <Form.Control
                 type="input"
-                id="inputName"
-                aria-describedby="passwordHelpBlock"
+                defaultValue={nick}
+                id={inputnicknameid}
                 className="w-75"
+                onChange={(e) => {
+                  setInputnickname(e.target.value);
+                  onUpdate(id, latitud, longitud, inputname, e.target.value);
+                }}
               />
             </Col>
           </Row>
@@ -74,6 +135,7 @@ export const TravellerCard = () => {
             scrollWheelZoom={true}
             style={containerStyle}
           >
+            <AttributionControl />
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

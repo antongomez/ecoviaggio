@@ -1,0 +1,88 @@
+[
+    {
+        "step1": [
+            {
+                "path": [
+                    [
+                        "Fulanito",
+                        42.0388,
+                        -8.878
+                    ],
+                    [
+                        "Menganito",
+                        42.1234,
+                        -8.8136
+                    ],
+                    [
+                        "Vigo Urzaiz",
+                        42.234189,
+                        -8.713728
+                    ]
+                ],
+                "emissions": 77.45213888645843
+            }
+        ],
+        "step2": {
+            "path": [
+                {
+                    "origin": "Vigo Urzaiz",
+                    "destiny": "Ourense",
+                    "emission": 70.36710778326005,
+                    "travel_type": "TRAIN"
+                },
+                {
+                    "origin": "Ourense",
+                    "destiny": "Zamora",
+                    "emission": 199.35404558408277,
+                    "travel_type": "TRAIN"
+                },
+                {
+                    "origin": "Zamora",
+                    "destiny": "Segovia",
+                    "emission": 150.5923491214662,
+                    "travel_type": "TRAIN"
+                },
+                {
+                    "origin": "Segovia",
+                    "destiny": "Madrid - Chamartin",
+                    "emission": 62.923687361168454,
+                    "travel_type": "TRAIN"
+                },
+                {
+                    "origin": "Madrid - Chamartin",
+                    "destiny": "Cuenca - Fernando Zobel",
+                    "emission": 139.2698839235305,
+                    "travel_type": "TRAIN"
+                },
+                {
+                    "origin": "Cuenca - Fernando Zobel",
+                    "destiny": "Valencia - Estacio del Nord",
+                    "emission": 163.75752456624534,
+                    "travel_type": "TRAIN"
+                },
+                {
+                    "origin": "Valencia - Estacio del Nord",
+                    "destiny": "Castelló",
+                    "emission": 64.27830621723248,
+                    "travel_type": "TRAIN"
+                }
+            ],
+            "emissions": 34.87225908683642
+        },
+        "step3": {
+            "origin": {
+                "id": "65300",
+                "name": "Castelló",
+                "latitude": 39.9882552,
+                "longitude": -0.0524126,
+                "type": "TRAIN_STATION"
+            },
+            "destination": [
+                "Destination",
+                40.2255,
+                0.2273
+            ],
+            "distance": 148.89518843533455
+        }
+    }
+]
