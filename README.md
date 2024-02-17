@@ -54,9 +54,7 @@ SPDX-License-Identifier: MIT
 
 ## Our license
 
-In order to avoid conflicts we opted for the MIT license since we mostly seek tha our project is simple and open. We thoroughly check all our depedencies and software used in the development of our project in order to 
-
-Para evitar conflictos decantámonos pola licencia MIT para o noso proxecto, xa que buscamos principalmente que sexa simple e aberta. Revisamos coidadosamente todas as nosas dependencias e software utilizado no desenvolvemento de noso proxecto para poder chegar ata esta conclusión.
+Aiming to avoid conflicts we opted for the MIT license since we mostly seek that our project is simple and open. We thoroughly checked all our depedencies and software used in the development of our project in order to reach this conclusion.
 
 ![EcoViaggio logo](https://github.com/antongomez/ecoviaggio/blob/main/lessco2_frontend/public/SymbolLogo.png)
 
