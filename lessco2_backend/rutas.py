@@ -101,7 +101,7 @@ def route_to_graph(cluster, node_data):
 
     destination_index = path.index(len(cluster) - 1)
     if destination_index == len(path) - 1:
-        path_idx_1 = path[: destination_index + 1]
+        path_idx_1 = path[:]
         path1 = [travelers_and_city[i] for i in path_idx_1]
         path_idx_2 = None
         path2 = None
@@ -113,7 +113,7 @@ def route_to_graph(cluster, node_data):
     else:
         path_idx_1 = path[: destination_index + 1]
         path1 = [travelers_and_city[i] for i in path_idx_1]
-        path_idx_2 = path[destination_index:]
+        path_idx_2 = list(reversed(path[destination_index:]))
         path2 = [travelers_and_city[i] for i in path_idx_2]
 
     emission1 = car_emissions(get_path_length(path_idx_1, distances))
