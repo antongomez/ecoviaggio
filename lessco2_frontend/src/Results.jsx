@@ -38,7 +38,7 @@ export const Results = () => {
         </Col>
       </Row>
       {state.map((route, index) => {
-        return <GroupRoute route={route} index={index} className="mb-5" />;
+        return <GroupRoute route={route} index={index} key={index} className="mb-5" />;
       })}
     </Container>
   );
@@ -154,12 +154,12 @@ function GroupRoute({ route, index }) {
   return (
     <Row className="mx-4 my-5 p-3 border rounded-2 shadow bg-white">
       <Col>
-        <h2>Grupo {index + 1}</h2>
+        <h2>Group {index + 1}</h2>
         <hr className="my-4" />
         <Row>
           <Col lg={6}>
-            {step1.map((group) => {
-              return <FriendsPath group={group} emissions={step1_emissions} />;
+            {step1.map((group, k) => {
+              return <FriendsPath key = {k} group={group} emissions={step1_emissions} />;
             })}
           </Col>
           <Col lg={4} className="px-0">
@@ -174,8 +174,8 @@ function GroupRoute({ route, index }) {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              {coordinates.map((coordinates_group) => {
-                return <Routing coordinates_group={coordinates_group} />;
+              {coordinates.map((coordinates_group, k) => {
+                return <Routing coordinates_group={coordinates_group} key={k}/>;
               })}
             </MapContainer>
           </Col>
@@ -222,8 +222,8 @@ function GroupRoute({ route, index }) {
                 pathOptions={{ color: "red" }}
                 positions={polyline_cars}
               />
-              {overall_coordinates.map((coordinates_group) => {
-                return <Routing coordinates_group={coordinates_group} />;
+              {overall_coordinates.map((coordinates_group, k) => {
+                return <Routing coordinates_group={coordinates_group} key={k}/>;
               })}
             </MapContainer>
           </Col>
@@ -247,7 +247,7 @@ function FriendsPath({ group, emissions }) {
               </Col>
               {group["path"].map((friend, index) => {
                 return (
-                  <>
+                  <div key={index}>
                     <Col xs="auto" className="px-1">
                       {index == group["path"].length - 1 ? (
                         <GeoAltFill />
@@ -265,7 +265,7 @@ function FriendsPath({ group, emissions }) {
                         <ArrowRight />
                       </Col>
                     )}
-                  </>
+                  </div>
                 );
               })}
             </Row>
@@ -354,7 +354,7 @@ function OptionalPath({ step2, step3 }) {
             <Row>
               {step2["path"].map((step, k) => {
                 return (
-                  <Row className="py-1">
+                  <Row className="py-1" key={k}>
                     <Col xs="auto">
                       {step["travel_type"] === "TRAIN" ? (
                         <TrainFront size={25} />
