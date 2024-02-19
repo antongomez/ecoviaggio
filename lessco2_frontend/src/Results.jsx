@@ -222,6 +222,42 @@ function GroupRoute({ route, index }) {
   );
 }
 
+function TravelSubstep ({origin, destination, travel_type}) {
+  let travel_type_icon = <></>;
+  switch (travel_type) {
+    case "TRAIN":
+      travel_type_icon = <TrainFront size={25} />;
+      break;
+    case "CAR":
+      travel_type_icon = <CarFront size={25} />;
+      break;
+    case "PLANE":
+      travel_type_icon = <AirplaneEngines size={25} />;
+      break;
+  }
+
+  return <Row className="py-1">
+          <Col xs="auto">
+            {travel_type_icon}
+          </Col>
+          <Col xs="auto" className="px-1">
+            <GeoAltFill />
+          </Col>
+          <Col xs="auto" className="pe-2 ps-0">
+            <span>{origin}</span>
+          </Col>
+          <Col xs="auto" className="px-2">
+            <ArrowRight />
+          </Col>
+          <Col xs="auto" className="px-1">
+            <GeoAltFill />
+          </Col>
+          <Col xs="auto" className="pe-2 ps-0">
+            <span>{destination}</span>
+          </Col>
+        </Row>
+}
+
 function FuelComsumption({ travel_step, emissions }) {
   let emissions_text = ''
   switch (travel_step) {
@@ -362,34 +398,7 @@ function OptionalPath({ step2, step3 }) {
             <h4>Public transport section:</h4>
             <Row>
               {step2["path"].map((step, k) => {
-                return (
-                  <Row className="py-1" key={k}>
-                    <Col xs="auto">
-                      {step["travel_type"] === "TRAIN" ? (
-                        <TrainFront size={25} />
-                      ) : step["travel_type"] === "CAR" ? (
-                        <CarFront size={25} />
-                      ) : (
-                        <AirplaneEngines size={25} />
-                      )}
-                    </Col>
-                    <Col xs="auto" className="px-1">
-                      <GeoAltFill />
-                    </Col>
-                    <Col xs="auto" className="pe-2 ps-0">
-                      <span>{step["origin"]}</span>
-                    </Col>
-                    <Col xs="auto" className="px-2">
-                      <ArrowRight />
-                    </Col>
-                    <Col xs="auto" className="px-1">
-                      <GeoAltFill />
-                    </Col>
-                    <Col xs="auto" className="pe-2 ps-0">
-                      <span>{step["destiny"]}</span>
-                    </Col>
-                  </Row>
-                );
+                return <TravelSubstep key={k} origin={step["origin"]} destination={step["destiny"]} travel_type={step["travel_type"]} />;
               })}
             </Row>
             <FuelComsumption travel_step={2} emissions={step2["emissions"]} />
@@ -426,26 +435,7 @@ function OptionalPath({ step2, step3 }) {
         <Row>
           <Col lg={6} className="py-2">
             <h4>Last car section:</h4>
-            <Row>
-              <Col xs="auto">
-                <CarFront size={25} />
-              </Col>
-              <Col xs="auto" className="px-1">
-                <GeoAltFill />
-              </Col>
-              <Col xs="auto" className="pe-2 ps-0">
-                <span>{step3["origin"]["name"]}</span>
-              </Col>
-              <Col xs="auto" className="px-2">
-                <ArrowRight />
-              </Col>
-              <Col xs="auto" className="px-1">
-                <GeoAltFill />
-              </Col>
-              <Col xs="auto" className="pe-2 ps-0">
-                <span>{step3["destination"][0]}</span>
-              </Col>
-            </Row>
+            <TravelSubstep origin={step3["origin"]["name"]} destination={step3["destination"][0]} travel_type="CAR" />
             <FuelComsumption travel_step={3} emissions={step3["emissions"]} />
           </Col>
           <Col lg={4}>
