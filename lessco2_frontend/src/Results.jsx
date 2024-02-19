@@ -185,18 +185,7 @@ function GroupRoute({ route, index }) {
       <hr className="my-4" />
       <Col>
         <h3>Full Trip</h3>
-
-        <Row className="pt-2">
-          <Col xs="auto" className="py-2">
-            <FuelPump size={25} />
-          </Col>
-          <Col xs="auto" className="py-2">
-            <p>
-              Total trip emissions: {Math.round(total_emissions * 100) / 100} kg
-              Co2
-            </p>
-          </Col>
-        </Row>
+        <FuelComsumption travel_step={4} emissions={total_emissions} />
         <Row className="d-flex justify-content-center">
           <Col lg={8}>
             <MapContainer
@@ -233,11 +222,39 @@ function GroupRoute({ route, index }) {
   );
 }
 
+function FuelComsumption({ travel_step, emissions }) {
+  let emissions_text = ''
+  switch (travel_step) {
+    case 1:
+      emissions_text = "First car section";
+      break;
+    case 2:
+      emissions_text = "Public transport section";
+      break;
+    case 3:
+      emissions_text = "Last car section";
+      break;
+    case 4:
+      emissions_text = "Full trip";
+      break;
+  }
+
+  return  <Row className="pt-2">
+    <Col xs="auto" className="py-2">
+      <FuelPump size={25} />
+    </Col>
+    <Col xs="auto" className="py-2">
+      <p>
+        {emissions_text} emissions: {Math.round(emissions * 100) / 100} kg Co2
+      </p>
+    </Col>
+  </Row>
+}
+
 function FriendsPath({ group, emissions }) {
   return (
     <Row className="pt-3">
       <h4> First car section: </h4>
-
       <Col xs="auto">
         <Row>
           <Col className="py-2">
@@ -245,9 +262,10 @@ function FriendsPath({ group, emissions }) {
               <Col xs="auto">
                 <CarFront size={25} />
               </Col>
+
               {group["path"].map((friend, index) => {
                 return (
-                  <div key={index}>
+                  <React.Fragment key={index}>
                     <Col xs="auto" className="px-1">
                       {index == group["path"].length - 1 ? (
                         <GeoAltFill />
@@ -265,20 +283,11 @@ function FriendsPath({ group, emissions }) {
                         <ArrowRight />
                       </Col>
                     )}
-                  </div>
+                  </React.Fragment>
                 );
               })}
             </Row>
-            <Row className="pt-2">
-              <Col xs="auto" className="py-2">
-                <FuelPump size={25} />
-              </Col>
-              <Col xs="auto" className="py-2">
-                <p>
-                  Section emissions: {Math.round(emissions * 100) / 100} kg Co2
-                </p>
-              </Col>
-            </Row>
+            <FuelComsumption travel_step={1} emissions={emissions} />
           </Col>
         </Row>
       </Col>
@@ -383,17 +392,7 @@ function OptionalPath({ step2, step3 }) {
                 );
               })}
             </Row>
-            <Row className="pt-2">
-              <Col xs="auto" className="py-2">
-                <FuelPump size={25} />
-              </Col>
-              <Col xs="auto" className="py-2">
-                <p>
-                  Section emissions:{" "}
-                  {Math.round(step2["emissions"] * 100) / 100} kg Co2
-                </p>
-              </Col>
-            </Row>
+            <FuelComsumption travel_step={2} emissions={step2["emissions"]} />
           </Col>
           <Col lg={4} className="d-flex flex-column justify-content-center">
             <MapContainer
@@ -447,17 +446,7 @@ function OptionalPath({ step2, step3 }) {
                 <span>{step3["destination"][0]}</span>
               </Col>
             </Row>
-            <Row className="pt-2">
-              <Col xs="auto" className="py-2">
-                <FuelPump size={25} />
-              </Col>
-              <Col xs="auto" className="py-2">
-                <p>
-                  Section emissions:{" "}
-                  {Math.round(step3["emissions"] * 100) / 100} kg Co2
-                </p>
-              </Col>
-            </Row>
+            <FuelComsumption travel_step={3} emissions={step3["emissions"]} />
           </Col>
           <Col lg={4}>
             <MapContainer
