@@ -2,101 +2,51 @@
 #
 # SPDX-License-Identifier: MIT
 
-import math
-from sklearn.cluster import DBSCAN
 from scipy.spatial.distance import cdist
-from sklearn.cluster import KMeans
 import numpy as np
 import networkx as nx
 import itertools
-from requests import request
 
+from clustering_functions import obtain_clusters
+from utils import distancia_semiverseno
 
-def __distancia_semiverseno__(c1, c2):
-    radioTierra = 6371
-    lat1 = math.radians(c1[0])
-    lon1 = math.radians(c1[1])
-    lat2 = math.radians(c2[0])
-    lon2 = math.radians(c2[1])
-
-    sinChi = math.sin((lat2 - lat1) / 2)
-    sinLambda = math.sin((lon2 - lon1) / 2)
-
-    raiz = (sinChi * sinChi) + math.cos(lat1) * math.cos(lat2) * (sinLambda * sinLambda)
-
-    return 2 * radioTierra * math.asin(math.sqrt(raiz))
-
-
-def car_emissions(distance):
-    return distance * distance * 0.118
-
-
-def obtain_clusters(origin_coordinates, max_distance=30):
-    x_coords = np.array([person[1] for person in origin_coordinates])
-    y_coords = np.array([person[2] for person in origin_coordinates])
-
-    clusters, final_clusters = [], []
-
-    data = np.array([x_coords, y_coords]).T
-    dbscan = DBSCAN(eps=max_distance, min_samples=1, metric=__distancia_semiverseno__).fit(data)
-
-    results = dbscan.labels_
-    for i in range(max(results) + 1):
-        clusters.append([origin_coordinates[j] for j in range(len(origin_coordinates)) if results[j] == i])
-
+def obtain_all_routes(coordinates, destination, emissions_graph, node_data, edge_data):
+    final_routes = []
+    clusters = obtain_clusters(coordinates)
+    last_city, dist_from_last_city = obtain_nearest_city(destination, node_data)
     for cluster in clusters:
-        centroid = obtain_centroid(cluster)
-        if len(cluster) <= 5:
-            cluster.append(centroid)
-            final_clusters.append(cluster)
+
+        cluster_route = {}
+
+        route, first_city = route_to_graph(cluster, node_data)
+        cluster_route["step1"] = route
+
+        if first_city["id"] == last_city["id"]:
+            for group in cluster_route["step1"]:
+                group["path"][-1] = destination
+                group["emissions"] = get_path_emissions(group["path"])
         else:
-            clusters_aux = divide_cluster(cluster)
-            final_clusters.extend(clusters_aux)
+            internal_route, total_emissions = dijkstra_route(
+                first_city["id"], last_city["id"], emissions_graph, node_data, edge_data
+            )
+            cluster_route["step2"] = {"path": internal_route, "emissions": total_emissions}
 
-    return final_clusters
+            cluster_route["step3"] = {
+                "origin": last_city,
+                "destination": destination,
+                "emissions": car_emissions(dist_from_last_city),
+            }
 
+        final_routes.append(cluster_route)
 
-def obtain_centroid(cluster):
-    coords = np.array([tupla[1:] for tupla in cluster])
-    centroid = np.mean(coords, axis=0)
-    return ["Centroid"] + list(centroid)
-
-
-def divide_cluster(cluster):
-    clusters = []
-
-    coords = np.array([tupla[1:] for tupla in cluster])
-    distances = cdist(coords, coords, metric=__distancia_semiverseno__)
-
-    kmeans = KMeans(n_clusters=math.ceil(len(cluster) / 5))
-
-    kmeans.fit(distances)
-    results = kmeans.labels_
-
-    for i in range(max(results) + 1):
-        clusters.append([cluster[j] for j in range(len(cluster)) if results[j] == i])
-        centroid = obtain_centroid(clusters[i])
-        clusters[i].append(centroid)
-
-    return clusters
-
-
-def concat_names(path):
-    if path is None:
-        return None
-    names = [tupla[0] for tupla in path[:-2]]
-    names = ", ".join(names)
-    if len(path) > 2:
-        names += " y " + path[-2][0]
-    return names
-
+    return final_routes
 
 def route_to_graph(cluster, node_data):
-    nearest_city_info, dist_city = obtain_nearest_city(cluster[-1], node_data)
+    nearest_city_info, _ = obtain_nearest_city(cluster[-1], node_data)
     nearest_city = [nearest_city_info["name"], nearest_city_info["latitude"], nearest_city_info["longitude"]]
     travelers_and_city = cluster[:-1] + [nearest_city]
     coords = np.array([tupla[1:] for tupla in travelers_and_city])
-    distances = cdist(coords, coords, metric=__distancia_semiverseno__)
+    distances = cdist(coords, coords, metric=distancia_semiverseno)
     path = obtain_shortest_path(distances)
 
     destination_index = path.index(len(cluster) - 1)
@@ -135,34 +85,11 @@ def obtain_nearest_city(reference_point, node_data):
     nearest_city = None
     for node in node_data:
         node_coordinates = [node_data[node]["latitude"], node_data[node]["longitude"]]
-        # coords = (
-        #     f"{node_data[node]['longitude']},{node_data[node]['latitude']};{reference_point[1]},{reference_point[2]}"
-        # )
-        # result = request("GET", f"http://router.project-osrm.org/route/v1/driving/{coords}?overview=false")
-        dist = __distancia_semiverseno__(node_coordinates, reference_point[1:])
-        # if result.status_code == 200:
-        #     content = result.json()
-        #     dist = content["routes"][0]["distance"]
-        # else:
-        #     print("Error en la request a ORSM")
-        #     print(result.status_code)
-        #     return None
+        dist = distancia_semiverseno(node_coordinates, reference_point[1:])
         if dist < min_distance:
             min_distance = dist
             nearest_city = node
     return node_data[nearest_city], min_distance
-
-
-# De momento no hace falta
-def obtain_distance_matrix(cluster):
-    distance_matrix = [[0] * len(cluster) for _ in range(len(cluster))]
-
-    for i in range(len(cluster)):
-        for j in range(len(cluster)):
-            distance_matrix[i][j] = __distancia_semiverseno__(cluster[i][1:], cluster[j][1:])
-
-    return distance_matrix
-
 
 def obtain_shortest_path(distances):
     num_cities = len(distances)
@@ -183,14 +110,8 @@ def obtain_shortest_path(distances):
 
     return shortest_path
 
-
-def get_path_emissions(path):
-    coords = np.array([tupla[1:] for tupla in path])
-    total_distance = 0
-    for i in range(len(coords) - 1):
-        total_distance += __distancia_semiverseno__(coords[i], coords[i + 1])
-    return car_emissions(total_distance)
-
+def car_emissions(distance):
+    return distance * distance * 0.118
 
 def get_path_length(path, distances):
     if path is None:
@@ -199,6 +120,22 @@ def get_path_length(path, distances):
     for i in range(len(path) - 1):
         length += distances[path[i]][path[i + 1]]
     return length
+
+def concat_names(path):
+    if path is None:
+        return None
+    names = [tupla[0] for tupla in path[:-2]]
+    names = ", ".join(names)
+    if len(path) > 2:
+        names += " y " + path[-2][0]
+    return names
+
+def get_path_emissions(path):
+    coords = np.array([tupla[1:] for tupla in path])
+    total_distance = 0
+    for i in range(len(coords) - 1):
+        total_distance += distancia_semiverseno(coords[i], coords[i + 1])
+    return car_emissions(total_distance)
 
 
 def dijkstra_route(origin, destiny, emissions_graph, node_data, edge_data):
@@ -219,35 +156,3 @@ def dijkstra_route(origin, destiny, emissions_graph, node_data, edge_data):
         internal_route.append(step)
 
     return internal_route, len
-
-
-def obtain_all_routes(coordinates, destination, emissions_graph, node_data, edge_data):
-    final_routes = []
-    clusters = obtain_clusters(coordinates)
-    last_city, dist_from_last_city = obtain_nearest_city(destination, node_data)
-    for cluster in clusters:
-
-        cluster_route = {}
-
-        route, first_city = route_to_graph(cluster, node_data)
-        cluster_route["step1"] = route
-
-        if first_city["id"] == last_city["id"]:
-            for group in cluster_route["step1"]:
-                group["path"][-1] = destination
-                group["emissions"] = get_path_emissions(group["path"])
-        else:
-            internal_route, total_emissions = dijkstra_route(
-                first_city["id"], last_city["id"], emissions_graph, node_data, edge_data
-            )
-            cluster_route["step2"] = {"path": internal_route, "emissions": total_emissions}
-
-            cluster_route["step3"] = {
-                "origin": last_city,
-                "destination": destination,
-                "emissions": car_emissions(dist_from_last_city),
-            }
-
-        final_routes.append(cluster_route)
-
-    return final_routes

@@ -3,21 +3,8 @@
 # SPDX-License-Identifier: MIT
 
 from models import Node, Edge
-import math
 
-def semiverseno(c1, c2):
-    radioTierra = 6371
-    lat1 = math.radians(c1[0])
-    lon1 = math.radians(c1[1])
-    lat2 = math.radians(c2[0])
-    lon2 = math.radians(c2[1])
-
-    sinChi = math.sin((lat2 - lat1) / 2)
-    sinLambda = math.sin((lon2 - lon1) / 2)
-
-    raiz = (sinChi * sinChi) + math.cos(lat1) * math.cos(lat2) * (sinLambda * sinLambda)
-
-    return 2 * radioTierra * math.asin(math.sqrt(raiz))
+from utils import distancia_semiverseno
 
 class TrainsGraph:
     def __init__(self):
@@ -227,5 +214,5 @@ class TrainsGraph:
                 lat2 = self.node_data[destination].latitude
                 lon2 = self.node_data[destination].longitude
                 self.trains_graph[origin][destination] = Edge(
-                    origin=origin, destination=destination, distance=semiverseno((lat1, lon1), (lat2, lon2)), co2=1, type="TRAIN"
+                    origin=origin, destination=destination, distance=distancia_semiverseno((lat1, lon1), (lat2, lon2)), co2=1, type="TRAIN"
                 )

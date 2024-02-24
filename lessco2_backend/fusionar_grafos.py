@@ -9,26 +9,11 @@
 import grafo_trenes
 import planes_graph
 from itertools import combinations
-import math
 from models import Edge
 import requests
 import json
 
-
-def __distancia_semiverseno__(c1, c2):
-    radioTierra = 6371
-    lat1 = math.radians(c1[0])
-    lon1 = math.radians(c1[1])
-    lat2 = math.radians(c2[0])
-    lon2 = math.radians(c2[1])
-
-    sinChi = math.sin((lat2 - lat1) / 2)
-    sinLambda = math.sin((lon2 - lon1) / 2)
-
-    raiz = (sinChi * sinChi) + math.cos(lat1) * math.cos(lat2) * (sinLambda * sinLambda)
-
-    return 2 * radioTierra * math.asin(math.sqrt(raiz))
-
+from utils import distancia_semiverseno
 
 tg = grafo_trenes.TrainsGraph()
 pg = planes_graph.PlanesGraph()
@@ -41,7 +26,7 @@ for n1, n2 in combinations(node_data, 2):
         continue
 
     # Generar ruta en coche si son menos de 10 km
-    distancia_tierra = __distancia_semiverseno__(
+    distancia_tierra = distancia_semiverseno(
         (node_data[n1].latitude, node_data[n1].longitude), (node_data[n2].latitude, node_data[n2].longitude)
     )
     if distancia_tierra < 10:
