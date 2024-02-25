@@ -4,7 +4,7 @@
 
 import Container from "react-bootstrap/esm/Container";
 import { TravellerCard } from "./TravellerCard";
-import { Col, Row, Spinner } from "react-bootstrap";
+import { Col, Row, Spinner, Button } from "react-bootstrap";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { Check } from "react-bootstrap-icons";
@@ -187,8 +187,21 @@ export const Home = () => {
       <footer className="footer mt-auto py-3 bg-white shadow fixed-bottom">
         <Row className="px-3 d-flex align-items-center">
           <Col xs="auto" className="ms-4">
-            <p className="my-0">
+            <p className="my-0 d-none d-sm-block">
               Complete passengers:{" "}
+              {
+                travellerCards.filter(
+                  (card) =>
+                    card.lat !== undefined &&
+                    card.lng !== undefined &&
+                    card.name !== undefined &&
+                    card.name.length > 0
+                ).length
+              }
+              /{travellerCards.length}
+            </p>
+            <p className="my-0 d-sm-none">
+              Passengers:{" "}
               {
                 travellerCards.filter(
                   (card) =>
@@ -202,15 +215,19 @@ export const Home = () => {
             </p>
           </Col>
           <Col>
-            <p className="my-0">
+            <p className="my-0 d-none d-sm-block">
               Destination:{" "}
               {latitud == undefined || longitud == undefined
                 ? "unselected"
                 : "selected"}
             </p>
+            <p className="my-0 d-sm-none">
+              Dest:{" "}
+              {latitud == undefined || longitud == undefined ? "-" : "\u2713"}
+            </p>
           </Col>
           <Col className="d-flex flex-column align-items-end">
-            <button
+            <Button
               disabled={
                 loading === true ||
                 latitud == undefined ||
@@ -225,17 +242,20 @@ export const Home = () => {
                   ? true
                   : false
               }
-              className="btn btn-primary me-4"
+              className="btn-primary me-4"
               onClick={onClickBuildTrip}
             >
               {loading === false ? (
-                "Build Trip"
+                <>
+                  <span className="d-none d-sm-inline">Build Trip</span>
+                  <span className="d-inline d-sm-none">Continue</span>
+                </>
               ) : (
                 <Spinner animation="border" variant="light" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </Spinner>
               )}
-            </button>
+            </Button>
           </Col>
         </Row>
       </footer>

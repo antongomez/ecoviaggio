@@ -60,10 +60,13 @@ export const TravellerCard = ({
       <Row className="border rounded-2 shadow bg-white mx-4 my-2 p-3">
         <Col lg={8}>
           <Row className="mt-2 mb-3">
-            <Col xs="auto">
-              <h3>Passenger {passengerNumber}</h3>
+            <Col
+              xs="auto"
+              className="pe-0 d-flex flex-column justify-content-center"
+            >
+              <h3 className="mb-0">Passenger {passengerNumber}</h3>
             </Col>
-            <Col xs="auto" className="d-flex align-items-center">
+            <Col xs="auto" className="d-flex align-items-center px-0">
               <Check
                 size={40}
                 className="x text-success"
@@ -77,7 +80,7 @@ export const TravellerCard = ({
                 }
               />
             </Col>
-            <Col xs="auto" className="d-flex align-items-center">
+            <Col xs="auto" className="d-flex align-items-center px-0">
               <Button
                 variant="transparent"
                 className="p-0 border-0"
