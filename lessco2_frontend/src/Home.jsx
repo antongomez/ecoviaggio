@@ -9,10 +9,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { Check } from "react-bootstrap-icons";
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { Marker, Popup } from "react-leaflet";
 import { useMapEvent } from "react-leaflet/hooks";
 import axios from "axios";
 import API from "./API";
+import { Map } from "./Map";
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export const Home = () => {
   const [longitud, setLongitud] = useState(undefined);
   const [loading, setLoading] = useState(false);
 
-  const containerStyle = {
+  const mapDestinationStyle = {
     width: "100%",
     height: "400px",
   };
@@ -39,6 +40,8 @@ export const Home = () => {
     lat: 43.3322352,
     lng: -8.4106015,
   };
+
+  const mapDestinationZoom = 8;
 
   const addContainer = () => {
     const newCard = {
@@ -77,25 +80,16 @@ export const Home = () => {
     setContainerCount(containerCount - 1);
   };
 
-  function AttributionControl() {
-    const map = useMap();
-
-    map.attributionControl.setPrefix(
-      '<a href="https://leafletjs.com/" title="A JavaScript library for interactive maps">Leaflet</a>'
-    );
-
-    return null;
-  }
-
   function LocationMarker() {
     const map = useMapEvent("click", (e) => {
       setLatitud(e.latlng.lat);
       setLongitud(e.latlng.lng);
+      map.flyTo(e.latlng, map.getZoom(), { duration: 0.5 });
     });
 
     return latitud === undefined || longitud === undefined ? undefined : (
       <Marker position={{ lat: latitud, lng: longitud }}>
-        <Popup>Punto de destino</Popup>
+        <Popup>Destination point</Popup>
       </Marker>
     );
   }
@@ -180,19 +174,13 @@ export const Home = () => {
         </Row>
         <Row className="mx-4 px-3 d-flex justify-content-center">
           <Col lg={8} className="px-0">
-            <MapContainer
+            <Map
+              containerStyle={mapDestinationStyle}
               center={defaultCenter}
-              zoom={8}
-              scrollWheelZoom={true}
-              style={containerStyle}
+              zoom={mapDestinationZoom}
             >
-              <AttributionControl />
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
               <LocationMarker />
-            </MapContainer>
+            </Map>
           </Col>
         </Row>
       </Container>

@@ -8,8 +8,9 @@ import { Col, Form, Row, Container, Button } from "react-bootstrap";
 import { Trash, Check } from "react-bootstrap-icons";
 import "leaflet/dist/leaflet.css";
 import "./scss/travellercard.scss";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { Marker, Popup } from "react-leaflet";
 import { useMapEvent } from "react-leaflet/hooks";
+import { Map } from "./Map";
 
 export const TravellerCard = ({
   id,
@@ -26,24 +27,17 @@ export const TravellerCard = ({
 
   let inputnameid = `input-name-${passengerNumber}`;
 
-  const containerStyle = {
+  const mapOriginStyle = {
     width: "100 %",
     height: "200px",
   };
+
   const defaultCenter = {
     lat: 43.3322352,
     lng: -8.4106015,
   };
 
-  function AttributionControl() {
-    const map = useMap();
-
-    map.attributionControl.setPrefix(
-      '<a href="https://leafletjs.com/" title="A JavaScript library for interactive maps">Leaflet</a>'
-    );
-
-    return null;
-  }
+  const mapOriginZoom = 8;
 
   function LocationMarker() {
     /* Hook providing the Leaflet Map instance in any descendant of a MapContainer */
@@ -51,11 +45,12 @@ export const TravellerCard = ({
       setLatitud(e.latlng.lat);
       setLongitud(e.latlng.lng);
       onUpdate(id, e.latlng.lat, e.latlng.lng, inputname);
+      map.flyTo(e.latlng, map.getZoom(), { duration: 0.5 });
     });
 
     return latitud === undefined || longitud === undefined ? undefined : (
       <Marker position={{ lat: latitud, lng: longitud }}>
-        <Popup>Punto de partida</Popup>
+        <Popup>Starting point</Popup>
       </Marker>
     );
   }
@@ -76,7 +71,7 @@ export const TravellerCard = ({
                   latitud == undefined ||
                   longitud == undefined ||
                   inputname == undefined ||
-                  inputname == "" 
+                  inputname == ""
                     ? "hidden"
                     : "visible"
                 }
@@ -102,31 +97,20 @@ export const TravellerCard = ({
                 className="w-100"
                 onChange={(e) => {
                   setInputname(e.target.value);
-                  onUpdate(
-                    id,
-                    latitud,
-                    longitud,
-                    e.target.value
-                  );
+                  onUpdate(id, latitud, longitud, e.target.value);
                 }}
               />
             </Col>
           </Row>
         </Col>
         <Col lg={4} className="">
-          <MapContainer
+          <Map
             center={defaultCenter}
-            zoom={8}
-            scrollWheelZoom={true}
-            style={containerStyle}
+            zoom={mapOriginZoom}
+            containerStyle={mapOriginStyle}
           >
-            <AttributionControl />
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
             <LocationMarker />
-          </MapContainer>
+          </Map>
         </Col>
       </Row>
     </Container>

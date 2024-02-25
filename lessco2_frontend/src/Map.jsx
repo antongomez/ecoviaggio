@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2024 EcoViaggio
+//
+// SPDX-License-Identifier: MIT
+
 import React from "react";
 import "leaflet-routing-machine";
 import L from "leaflet";
@@ -29,6 +33,8 @@ const createRouting = (props) => {
 const RoutingMachine = createControlComponent(createRouting);
 
 export const Map = ({
+  center,
+  zoom,
   containerStyle,
   coordinate_car_routing,
   coordinate_public_cars,
@@ -36,9 +42,15 @@ export const Map = ({
   coordinate_public_trains,
   first_stop,
   last_stop,
+  children,
 }) => {
   return (
-    <MapContainer scrollWheelZoom={true} style={containerStyle}>
+    <MapContainer
+      center={center ? center : undefined}
+      zoom={zoom ? zoom : undefined}
+      scrollWheelZoom={true}
+      style={containerStyle}
+    >
       <AttributionControl />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -54,6 +66,7 @@ export const Map = ({
           last_stop,
         }}
       />
+      {children}
     </MapContainer>
   );
 };
