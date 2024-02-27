@@ -1,0 +1,11 @@
+on:
+  push:
+    paths:
+      - '*_backend/**'
+
+jobs:
+  redeploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call the redeployment URL for the backend.
+        run: curl ${{ secrets.REDEPLOY_BACKEND_URL }}
