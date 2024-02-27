@@ -1,0 +1,11 @@
+on:
+  push:
+    paths:
+      - '*_frontend/**'
+
+jobs:
+  redeploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call the redeployment URL for the frontend.
+        run: curl ${{ secrets.REDEPLOY_FRONTEND_URL }}
